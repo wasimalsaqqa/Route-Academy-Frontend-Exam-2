@@ -1,75 +1,143 @@
+const BASE_URL = 'https://nutriplan-api.vercel.app/api';
+const USDA_API_KEY = 'rZtZs2LlcSgbh7opLqTPUtmgXyereSCAwkdtiwgA';
 
-export class AppState{
-  constructor(){
-    this.currentPage = 'meals'; 
-    this.foodLog = this.loadFoodLog();
-    this.dailyGoals = {
-      calories: 2000,
-      protein: 150,
-      carbs: 250,
-      fats: 70
-    };
-  }
-  
-  setCurrentPage(page){this.currentPage = page;}
-  getCurrentPage(){return this.currentPage;}
-  
-  loadFoodLog(){
-    try{
-      const log = localStorage.getItem('nutriplan_foodlog');
-      return log?JSON.parse(log):[];
-    }
-    catch(error){
-      console.error('Failed to load food log from localStorage:', error);
-      return [];
-    }
-  }
+export const searchMeals = async (query = '', page = 1, limit = 25) => {
 
-  saveFoodLog(){
-    try{
-      localStorage.setItem('nutriplan_foodlog', JSON.stringify(this.foodLog));
-    }
-    catch(error){
-      console.error('Failed to save food log to localStorage:', error);
-    }
+  try{
+    const response = await fetch(`${BASE_URL}/meals/search?q=${query}&page=${page}&limit=${limit}`);
+    if(!response.ok) 
+        throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    console.log('Meals Search Response:', data);
+    return data.meals || data.data || data.results || data.items || []; 
   }
+  catch(error){
+    console.error('Error searching meals:', error);
+    return [];
+  }
+};
 
-  addFoodItem(item){
-    const newItem = {
-      ...item,
-      logId: Date.now().toString(),
-      date: new Date().toLocaleDateString()
-    };
+export const getMealById = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/meals/${id}`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
     
-    this.foodLog.push(newItem);
-    this.saveFoodLog();
+    return data.meal || data.data || data.result || data;
+  } catch (error) {
+    console.error(`Error fetching meal details for ID ${id}:`, error);
+    return null;
   }
+};
 
-  removeFoodItem(logId){
-    this.foodLog = this.foodLog.filter(item => item.logId !== logId);
-    this.saveFoodLog();
+export const fetchCategories = async () => {
+
+  try{
+    const response = await fetch(`${BASE_URL}/meals/categories`);
+    if(!response.ok) 
+        throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    console.log('Categories Response:', data);
+    return data.categories || data.data || data.results || [];
   }
-
-  clearFoodLog(){
-    this.foodLog = [];
-    this.saveFoodLog();
+  catch(error){
+    console.error('Error fetching categories:', error);
+    return [];
   }
+};
 
-  getTodayLog(){
-    const today = new Date().toLocaleDateString();
-    return this.foodLog.filter(item => item.date === today);
-  }
+export const analyzeRecipeNutrition = async(recipeName, ingredientsArray) => {
 
-  getTodayTotals(){
-    const todayLog = this.getTodayLog();
+  try{
+    const response = await fetch(`${BASE_URL}/nutrition/analyze`,{
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/json',
+        'x-api-key': USDA_API_KEY
+      },
+      body: JSON.stringify({
+        recipeName: recipeName,
+        ingredients: ingredientsArray
+      })
+    });
     
-    return todayLog.reduce((totals, item) => {
-      totals.calories += (parseFloat(item.calories) || 0);
-      totals.protein += (parseFloat(item.protein) || 0);
-      totals.carbs += (parseFloat(item.carbs) || 0);
-      totals.fats += (parseFloat(item.fats) || 0);
-      return totals;
-    }, {calories: 0, protein: 0, carbs: 0, fats: 0});
+    if(!response.ok) 
+        throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
   }
-}
+  catch(error){
+    console.error('Error analyzing nutrition:', error);
+    return null;
+  }
+};
+
+export const searchProducts = async(query, page=1, limit=24) => {
+  try {
+    const response = await fetch(`${BASE_URL}/products/search?q=${query}&page=${page}&limit=${limit}`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    
+    const data = await response.json();
+    
+    return data.products || data.data || data.results || data.items || (Array.isArray(data) ? data : []);
+  } catch(error) {
+    console.error('Error searching products:', error);
+    return [];
+  }
+};
+
+export const getProductByBarcode = async(barcode) => {
+  try {
+    const response = await fetch(`${BASE_URL}/products/barcode/${barcode}`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    
+    const data = await response.json();
+
+    return data.product || data.data || data;
+  } catch(error) {
+    console.error(`Error fetching product with barcode ${barcode}:`, error);
+    return null;
+  }
+};
+
+export const getProductCategories = async() => {
+
+  try{
+    const response = await fetch(`${BASE_URL}/products/categories`);
+    if(!response.ok) 
+        throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    return data.categories || [];
+  }
+  catch(error){
+    console.error('Error fetching product categories:', error);
+    return [];
+  }
+};
+
+export const getProductsByCategory = async(category) => {
+
+  try{
+    const response = await fetch(`${BASE_URL}/products/category/${category}`);
+    if(!response.ok) 
+        throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    return data.products || [];
+  }
+  catch(error){
+    console.error(`Error fetching products for category ${category}:`, error);
+    return [];
+  }
+};
+
+export const fetchAreas = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/meals/areas`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    return data.areas || data.data || data.results || [];
+  } catch (error) {
+    console.error('Error fetching areas:', error);
+    return [];
+  }
+};
 

@@ -1,17 +1,17 @@
 const categoryStyleMap = {
-  'Beef': {bg: 'bg-red-100 text-red-700 border-red-200', iconBg: 'bg-red-500', icon: 'fa-drumstick-bite'},
-  'Chicken': {bg: 'bg-orange-100 text-orange-700 border-orange-200', iconBg: 'bg-orange-500', icon: 'fa-kiwi-bird'},
-  'Dessert': {bg: 'bg-purple-100 text-purple-700 border-purple-200', iconBg: 'bg-purple-500', icon: 'fa-cake-candles'},
-  'Lamb': {bg: 'bg-amber-100 text-amber-700 border-amber-200', iconBg: 'bg-amber-500', icon: 'fa-bone'},
-  'Miscellaneous': {bg: 'bg-gray-100 text-gray-700 border-gray-200', iconBg: 'bg-gray-400', icon: 'fa-bowl-food'},
-  'Pasta': {bg: 'bg-yellow-100 text-yellow-700 border-yellow-200', iconBg: 'bg-yellow-500', icon: 'fa-bowl-rice'},
-  'Pork': {bg: 'bg-red-100 text-red-700 border-red-200', iconBg: 'bg-red-500', icon: 'fa-bacon'},
-  'Seafood': {bg: 'bg-blue-100 text-blue-700 border-blue-200', iconBg: 'bg-blue-500', icon: 'fa-fish'},
-  'Side': {bg: 'bg-green-100 text-green-700 border-green-200', iconBg: 'bg-green-500', icon: 'fa-carrot'},
-  'Starter': {bg: 'bg-teal-200 text-teal-700 border-teal-200', iconBg: 'bg-emerald-600', icon: 'fa-utensils'},
-  'Vegan': {bg: 'bg-emerald-100 text-emerald-700 border-emerald-200', iconBg: 'bg-emerald-500', icon: 'fa-leaf'},
-  'Vegetarian': {bg: 'bg-lime-100 text-lime-700 border-lime-200', iconBg: 'bg-lime-500', icon: 'fa-seedling'},
-  'Default': {bg: 'bg-gray-100 text-gray-700 border-gray-200', iconBg: 'bg-gray-500', icon: 'fa-utensils'}
+  'Beef': { bg: 'bg-red-100 text-red-700 border-red-200', iconBg: 'bg-red-500', icon: 'fa-drumstick-bite' },
+  'Chicken': { bg: 'bg-orange-100 text-orange-700 border-orange-200', iconBg: 'bg-orange-500', icon: 'fa-kiwi-bird' },
+  'Dessert': { bg: 'bg-purple-100 text-purple-700 border-purple-200', iconBg: 'bg-purple-500', icon: 'fa-cake-candles' },
+  'Lamb': { bg: 'bg-amber-100 text-amber-700 border-amber-200', iconBg: 'bg-amber-500', icon: 'fa-bone' },
+  'Miscellaneous': { bg: 'bg-gray-100 text-gray-700 border-gray-200', iconBg: 'bg-gray-400', icon: 'fa-bowl-food' },
+  'Pasta': { bg: 'bg-yellow-100 text-yellow-700 border-yellow-200', iconBg: 'bg-yellow-500', icon: 'fa-bowl-rice' },
+  'Pork': { bg: 'bg-red-100 text-red-700 border-red-200', iconBg: 'bg-red-500', icon: 'fa-bacon' },
+  'Seafood': { bg: 'bg-blue-100 text-blue-700 border-blue-200', iconBg: 'bg-blue-500', icon: 'fa-fish' },
+  'Side': { bg: 'bg-green-100 text-green-700 border-green-200', iconBg: 'bg-green-500', icon: 'fa-carrot' },
+  'Starter': { bg: 'bg-teal-200 text-teal-700 border-teal-200', iconBg: 'bg-emerald-600', icon: 'fa-utensils' },
+  'Vegan': { bg: 'bg-emerald-100 text-emerald-700 border-emerald-200', iconBg: 'bg-emerald-500', icon: 'fa-leaf' },
+  'Vegetarian': { bg: 'bg-lime-100 text-lime-700 border-lime-200', iconBg: 'bg-lime-500', icon: 'fa-seedling' },
+  'Default': { bg: 'bg-gray-100 text-gray-700 border-gray-200', iconBg: 'bg-gray-500', icon: 'fa-utensils' }
 };
 
 export const createLoadingSpinner = () => {
@@ -93,6 +93,7 @@ export const createAreaPill = (area, isActive = false) => {
   return `<button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full font-medium text-sm whitespace-nowrap hover:bg-gray-200 transition-all filter-area-btn" data-area="${areaName}">${areaName}</button>`;
 };
 
+// extract youtube video id from url string
 const getYoutubeId = (url) => {
   if (!url) return null;
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -151,7 +152,7 @@ export const createMealDetailsView = (meal, nutrition = {}) => {
       <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
         <div class="relative h-80 md:h-96">
           <img src="${imageUrl}" alt="${meal.name}" class="w-full h-full object-cover" />
-          <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
           <div class="absolute bottom-0 left-0 right-0 p-8">
             <div class="flex items-center gap-3 mb-3">
               <span class="px-3 py-1 bg-emerald-500 text-white text-sm font-semibold rounded-full">${meal.category || 'General'}</span>
@@ -218,7 +219,7 @@ export const createMealDetailsView = (meal, nutrition = {}) => {
             <div>
               <p class="text-sm text-gray-500 mb-4">Per serving</p>
               
-              <div class="text-center py-4 mb-4 bg-linear-to-br from-emerald-50 to-teal-50 rounded-xl">
+              <div class="text-center py-4 mb-4 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl">
                 <p class="text-sm text-gray-600">Calories per serving</p>
                 <p class="text-4xl font-bold text-emerald-600">${cals}</p>
                 <p class="text-xs text-gray-500 mt-1">Total: ${totalCals} cal</p>
@@ -339,4 +340,3 @@ const formatIngredient = (ing) => {
   }
   return String(ing);
 };
-

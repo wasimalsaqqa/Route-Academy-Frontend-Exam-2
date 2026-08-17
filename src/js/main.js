@@ -1,6 +1,6 @@
-import{AppState} from './state/appState.js';
-import{searchMeals, fetchCategories, fetchAreas, getMealById, analyzeRecipeNutrition, searchProducts, getProductByBarcode} from './api/mealdb.js';
-import{createRecipeCard, createCategoryCard, createEmptyState, createLoadingSpinner, createAreaPill, createMealDetailsView, createProductCard} from './ui/components.js';
+import { AppState } from './state/appState.js';
+import { searchMeals, fetchCategories, fetchAreas, getMealById, analyzeRecipeNutrition, searchProducts, getProductByBarcode } from './api/mealdb.js';
+import { createRecipeCard, createCategoryCard, createEmptyState, createLoadingSpinner, createAreaPill, createMealDetailsView, createProductCard } from './ui/components.js';
 
 const app = new AppState();
 
@@ -25,6 +25,7 @@ let currentProductsData = [];
 const renderFoodLog = () => {
   if (!foodlogSection) return;
 
+  // append food log to the correct container to prevent sidebar overlap
   if (productsSection && productsSection.parentElement && foodlogSection.parentElement !== productsSection.parentElement) {
     productsSection.parentElement.appendChild(foodlogSection);
   }
@@ -789,4 +790,3 @@ const init = () => {
 };
 
 document.addEventListener('DOMContentLoaded', init);
-
